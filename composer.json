@@ -1,0 +1,19 @@
+{
+    "name": "mcmatters/grumphp-fqn-checker",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Borzyonok",
+            "email": "dima.matters@gmail.com"
+        }
+    ],
+    "require": {
+        "phpro/grumphp": "~0.10",
+        "mcmatters/fqn-checker": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "McMatters\\Grumphp\\FqnChecker\\": "src/"
+        }
+    }
+}
