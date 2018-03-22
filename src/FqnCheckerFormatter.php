@@ -46,16 +46,18 @@ class FqnCheckerFormatter
     {
         $messages = [];
         $headers = ['Function', 'Lines'];
+        $buffer = new BufferedOutput();
 
         foreach ($this->errors as $file => $fileErrors) {
-            $buffer = new BufferedOutput();
+            foreach ($this->getRows($fileErrors) as $namespace => $rows) {
+                $message = "File: {$file}".PHP_EOL."Namespace: {$namespace}".PHP_EOL;
 
-            $table = new Table($buffer);
-            $table->setHeaders($headers);
-            $table->addRows($this->getRows($fileErrors));
-            $table->render();
+                (new Table($buffer))->setHeaders($headers)
+                    ->addRows($rows)
+                    ->render();
 
-            $messages[] = "File: {$file}".PHP_EOL.$buffer->fetch();
+                $messages[] = "{$message}{$buffer->fetch()}";
+            }
         }
 
         return $this->getHeading().PHP_EOL.PHP_EOL.implode(PHP_EOL, $messages);
@@ -69,14 +71,11 @@ class FqnCheckerFormatter
     protected function getRows(array $fileErrors): array
     {
         $rows = [];
-        $combined = [];
 
-        foreach ($fileErrors as $error) {
-            $combined[$error['function']][] = $error['line'];
-        }
-
-        foreach ($combined as $function => $lines) {
-            $rows[] = [$function, implode(', ', $lines)];
+        foreach ($fileErrors as $namespace =>  $errors) {
+            foreach ($errors as $function => $lines) {
+                $rows[$namespace][] = [$function, implode(', ', $lines)];
+            }
         }
 
         return $rows;

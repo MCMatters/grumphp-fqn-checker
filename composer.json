@@ -9,7 +9,7 @@
     ],
     "require": {
         "phpro/grumphp": "~0.10",
-        "mcmatters/fqn-checker": "^1.0"
+        "mcmatters/fqn-checker": "~1.0.2"
     },
     "autoload": {
         "psr-4": {
