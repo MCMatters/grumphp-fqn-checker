@@ -11,10 +11,14 @@ use GrumPHP\Task\Context\ContextInterface;
 use GrumPHP\Task\Context\GitPreCommitContext;
 use GrumPHP\Task\Context\RunContext;
 use GrumPHP\Task\TaskInterface;
-use McMatters\FqnChecker\FqnChecker;
-use RuntimeException;
+use McMatters\FqnChecker\Console\Command\RunCommand;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use const PHP_EOL;
+use function implode;
 
 /**
  * Class FqnCheckerTask
@@ -74,7 +78,7 @@ class FqnCheckerTask implements TaskInterface
             return TaskResult::createFailed(
                 $this,
                 $context,
-                (new FqnCheckerFormatter($errors))->format()
+                implode(PHP_EOL, $errors)
             );
         }
 
@@ -88,18 +92,27 @@ class FqnCheckerTask implements TaskInterface
      */
     protected function getErrors(FilesCollection $files): array
     {
+        if ($files->isEmpty()) {
+            return [];
+        }
+
         $errors = [];
+        $output = new BufferedOutput();
+
+        $app = new Application();
+        $app->add(new RunCommand());
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
-            try {
-                $unimported = (new FqnChecker($file->getContents()))->getUnimported();
+            $input = new ArrayInput([
+                'command' => 'fqn-checker:check',
+                'path' => $file->getPath(),
+            ]);
 
-                if (!empty($unimported)) {
-                    $errors[$file->getRelativePathname()] = $unimported;
-                }
-            } catch (RuntimeException $e) {
-                continue;
+            $app->run($input, $output);
+
+            if ($fetch = $output->fetch()) {
+                $errors[$file->getRelativePathname()] = $fetch;
             }
         }
 

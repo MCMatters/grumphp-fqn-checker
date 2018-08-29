@@ -45,7 +45,7 @@ class FqnCheckerFormatter
     protected function getMessage(): string
     {
         $messages = [];
-        $headers = ['Function', 'Lines'];
+        $headers = ['Unimported', 'Lines'];
         $buffer = new BufferedOutput();
 
         foreach ($this->errors as $file => $fileErrors) {
@@ -86,7 +86,7 @@ class FqnCheckerFormatter
      */
     protected function getHeading(): string
     {
-        $message = 'Used unimported functions';
+        $message = 'Used unimported functions or/and constants';
 
         $wrap = str_repeat('*', strlen($message) + 12);
 
