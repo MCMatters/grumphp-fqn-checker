@@ -100,13 +100,14 @@ class FqnCheckerTask implements TaskInterface
         $output = new BufferedOutput();
 
         $app = new Application();
+        $app->setAutoExit(false);
         $app->add(new RunCommand());
 
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $input = new ArrayInput([
                 'command' => 'fqn-checker:check',
-                'path' => $file->getPath(),
+                'path' => $file->getRealPath(),
             ]);
 
             $app->run($input, $output);
