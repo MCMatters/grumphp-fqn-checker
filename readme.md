@@ -11,13 +11,12 @@ composer require mcmatters/grumphp-fqn-checker
 Add next lines to your `grumphp.yml`:
 
 ```yaml
-parameters:
+grumphp:
     tasks:
       fqn_checker: ~
 
 services:
-  task.fqn_checker:
-    class: McMatters\Grumphp\FqnChecker\FqnCheckerTask
-    tags:
-      - {name: grumphp.task, config: fqn_checker}
+    McMatters\Grumphp\FqnChecker\FqnCheckerTask:
+        tags:
+            - { name: grumphp.task, task: fqn_checker }
 ```

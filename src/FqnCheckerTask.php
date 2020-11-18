@@ -7,6 +7,7 @@ namespace McMatters\Grumphp\FqnChecker;
 use GrumPHP\Collection\FilesCollection;
 use GrumPHP\Runner\TaskResult;
 use GrumPHP\Runner\TaskResultInterface;
+use GrumPHP\Task\Config\TaskConfigInterface;
 use GrumPHP\Task\Context\ContextInterface;
 use GrumPHP\Task\Context\GitPreCommitContext;
 use GrumPHP\Task\Context\RunContext;
@@ -28,27 +29,37 @@ use function implode;
 class FqnCheckerTask implements TaskInterface
 {
     /**
-     * @return string
+     * @var TaskConfigInterface
      */
-    public function getName(): string
-    {
-        return 'fqn_checker';
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfiguration(): array
-    {
-        return [];
-    }
+    private $config;
 
     /**
      * @return OptionsResolver
      */
-    public function getConfigurableOptions(): OptionsResolver
+    public static function getConfigurableOptions(): OptionsResolver
     {
         return new OptionsResolver();
+    }
+
+    /**
+     * @param \GrumPHP\Task\Config\TaskConfigInterface $config
+     *
+     * @return $this|\GrumPHP\Task\TaskInterface
+     */
+    public function withConfig(TaskConfigInterface $config): TaskInterface
+    {
+        $new = clone $this;
+        $new->config = $config;
+
+        return $new;
+    }
+
+    /**
+     * @return \GrumPHP\Task\Config\TaskConfigInterface
+     */
+    public function getConfig(): TaskConfigInterface
+    {
+        return $this->config;
     }
 
     /**
@@ -62,9 +73,10 @@ class FqnCheckerTask implements TaskInterface
     }
 
     /**
-     * @param ContextInterface $context
+     * @param \GrumPHP\Task\Context\ContextInterface $context
      *
-     * @return TaskResultInterface
+     * @return \GrumPHP\Runner\TaskResultInterface
+     * @throws \Exception
      */
     public function run(ContextInterface $context): TaskResultInterface
     {
@@ -86,9 +98,10 @@ class FqnCheckerTask implements TaskInterface
     }
 
     /**
-     * @param FilesCollection $files
+     * @param \GrumPHP\Collection\FilesCollection $files
      *
      * @return array
+     * @throws \Exception
      */
     protected function getErrors(FilesCollection $files): array
     {
