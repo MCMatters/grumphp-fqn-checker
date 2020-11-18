@@ -1,13 +1,15 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace McMatters\Grumphp\FqnChecker;
 
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\BufferedOutput;
-use const PHP_EOL;
+
 use function implode, strlen, str_repeat;
+
+use const PHP_EOL;
 
 /**
  * Class FqnCheckerFormatter
@@ -72,7 +74,7 @@ class FqnCheckerFormatter
     {
         $rows = [];
 
-        foreach ($fileErrors as $namespace =>  $errors) {
+        foreach ($fileErrors as $namespace => $errors) {
             foreach ($errors as $function => $lines) {
                 $rows[$namespace][] = [$function, implode(', ', $lines)];
             }

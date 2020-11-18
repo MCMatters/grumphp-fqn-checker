@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace McMatters\Grumphp\FqnChecker;
 
@@ -16,10 +16,11 @@ use McMatters\FqnChecker\Console\Command\RunCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use const PHP_EOL;
+
 use function implode;
+
+use const PHP_EOL;
 
 /**
  * Class FqnCheckerTask
@@ -29,12 +30,12 @@ use function implode;
 class FqnCheckerTask implements TaskInterface
 {
     /**
-     * @var TaskConfigInterface
+     * @var \GrumPHP\Task\Config\TaskConfigInterface
      */
     private $config;
 
     /**
-     * @return OptionsResolver
+     * @return \Symfony\Component\OptionsResolver\OptionsResolver
      */
     public static function getConfigurableOptions(): OptionsResolver
     {
@@ -44,7 +45,7 @@ class FqnCheckerTask implements TaskInterface
     /**
      * @param \GrumPHP\Task\Config\TaskConfigInterface $config
      *
-     * @return $this|\GrumPHP\Task\TaskInterface
+     * @return \GrumPHP\Task\TaskInterface
      */
     public function withConfig(TaskConfigInterface $config): TaskInterface
     {
@@ -63,7 +64,7 @@ class FqnCheckerTask implements TaskInterface
     }
 
     /**
-     * @param ContextInterface $context
+     * @param \GrumPHP\Task\Context\ContextInterface $context
      *
      * @return bool
      */
@@ -76,6 +77,7 @@ class FqnCheckerTask implements TaskInterface
      * @param \GrumPHP\Task\Context\ContextInterface $context
      *
      * @return \GrumPHP\Runner\TaskResultInterface
+     *
      * @throws \Exception
      */
     public function run(ContextInterface $context): TaskResultInterface
@@ -101,6 +103,7 @@ class FqnCheckerTask implements TaskInterface
      * @param \GrumPHP\Collection\FilesCollection $files
      *
      * @return array
+     *
      * @throws \Exception
      */
     protected function getErrors(FilesCollection $files): array
@@ -116,7 +119,7 @@ class FqnCheckerTask implements TaskInterface
         $app->setAutoExit(false);
         $app->add(new RunCommand());
 
-        /** @var SplFileInfo $file */
+        /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($files as $file) {
             $input = new ArrayInput([
                 'command' => 'fqn-checker:check',
