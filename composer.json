@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "phpro/grumphp": "~0.10",
+        "phpro/grumphp": "^0.10 || ^1.0",
         "mcmatters/fqn-checker": "^2.0"
     },
     "autoload": {
