@@ -7,7 +7,9 @@ namespace McMatters\Grumphp\FqnChecker;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-use function implode, strlen, str_repeat;
+use function implode;
+use function strlen;
+use function str_repeat;
 
 use const PHP_EOL;
 
