@@ -1,4 +1,5 @@
 services:
-  McMatters\Grumphp\FqnChecker\FqnCheckerTask:
+  McMatters\GrumPHPFqnChecker\FqnCheckerTask:
+    class: \McMatters\GrumPHPFqnChecker\FqnCheckerTask
     tags:
       - { name: grumphp.task, task: fqn_checker }
