@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace McMatters\Grumphp\FqnChecker;
+namespace McMatters\GrumPHPFqnChecker;
 
 use GrumPHP\Collection\FilesCollection;
 use GrumPHP\Runner\TaskResult;
 use GrumPHP\Runner\TaskResultInterface;
+use GrumPHP\Task\Config\ConfigOptionsResolver;
 use GrumPHP\Task\Config\TaskConfigInterface;
 use GrumPHP\Task\Context\ContextInterface;
 use GrumPHP\Task\Context\GitPreCommitContext;
@@ -16,68 +17,29 @@ use McMatters\FqnChecker\Console\Command\RunCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use function implode;
 
 use const PHP_EOL;
 
-/**
- * Class FqnCheckerTask
- *
- * @package McMatters\Grumphp\FqnChecker
- */
 class FqnCheckerTask implements TaskInterface
 {
-    /**
-     * @var \GrumPHP\Task\Config\TaskConfigInterface
-     */
-    private $config;
+    protected TaskConfigInterface $config;
 
-    /**
-     * @return \Symfony\Component\OptionsResolver\OptionsResolver
-     */
-    public static function getConfigurableOptions(): OptionsResolver
+    public static function getConfigurableOptions(): ConfigOptionsResolver
     {
-        return new OptionsResolver();
+        return ConfigOptionsResolver::fromClosure(static fn () => []);
     }
 
-    /**
-     * @param \GrumPHP\Task\Config\TaskConfigInterface $config
-     *
-     * @return \GrumPHP\Task\TaskInterface
-     */
-    public function withConfig(TaskConfigInterface $config): TaskInterface
-    {
-        $new = clone $this;
-        $new->config = $config;
-
-        return $new;
-    }
-
-    /**
-     * @return \GrumPHP\Task\Config\TaskConfigInterface
-     */
-    public function getConfig(): TaskConfigInterface
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param \GrumPHP\Task\Context\ContextInterface $context
-     *
-     * @return bool
-     */
     public function canRunInContext(ContextInterface $context): bool
     {
-        return ($context instanceof GitPreCommitContext || $context instanceof RunContext);
+        return (
+            $context instanceof GitPreCommitContext ||
+            $context instanceof RunContext
+        );
     }
 
     /**
-     * @param \GrumPHP\Task\Context\ContextInterface $context
-     *
-     * @return \GrumPHP\Runner\TaskResultInterface
-     *
      * @throws \Exception
      */
     public function run(ContextInterface $context): TaskResultInterface
@@ -92,18 +54,27 @@ class FqnCheckerTask implements TaskInterface
             return TaskResult::createFailed(
                 $this,
                 $context,
-                implode(PHP_EOL, $errors)
+                implode(PHP_EOL, $errors),
             );
         }
 
         return TaskResult::createPassed($this, $context);
     }
 
+    public function getConfig(): TaskConfigInterface
+    {
+        return $this->config;
+    }
+
+    public function withConfig(TaskConfigInterface $config): TaskInterface
+    {
+        $new = clone $this;
+        $new->config = $config;
+
+        return $new;
+    }
+
     /**
-     * @param \GrumPHP\Collection\FilesCollection $files
-     *
-     * @return array
-     *
      * @throws \Exception
      */
     protected function getErrors(FilesCollection $files): array

@@ -8,12 +8,18 @@
         }
     ],
     "require": {
-        "phpro/grumphp": "^0.10 || ^1.0",
-        "mcmatters/fqn-checker": "^2.0"
+        "php": ">=8.0",
+        "phpro/grumphp": "^2.4.0",
+        "mcmatters/fqn-checker": "^3.0"
     },
     "autoload": {
         "psr-4": {
-            "McMatters\\Grumphp\\FqnChecker\\": "src/"
+            "McMatters\\GrumPHPFqnChecker\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
         }
     }
 }

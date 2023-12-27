@@ -1,8 +1,8 @@
-## Grumphp Fqn Checker Task
+## GrumPHP FQN Checker Task
 
 ### Installation
 
-```bash
+```shell
 composer require mcmatters/grumphp-fqn-checker
 ```
 
@@ -15,8 +15,6 @@ grumphp:
     tasks:
       fqn_checker: ~
 
-services:
-    McMatters\Grumphp\FqnChecker\FqnCheckerTask:
-        tags:
-            - { name: grumphp.task, task: fqn_checker }
+    extensions:
+      - McMatters\GrumPHPFqnChecker\FqnCheckerExtension
 ```

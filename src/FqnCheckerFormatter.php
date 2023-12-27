@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace McMatters\Grumphp\FqnChecker;
+namespace McMatters\GrumPHPFqnChecker;
 
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -13,43 +13,24 @@ use function str_repeat;
 
 use const PHP_EOL;
 
-/**
- * Class FqnCheckerFormatter
- *
- * @package McMatters\Grumphp\FqnChecker
- */
 class FqnCheckerFormatter
 {
-    /**
-     * @var array
-     */
-    protected $errors = [];
+    protected array $errors = [];
 
-    /**
-     * FqnCheckerFormatter constructor.
-     *
-     * @param array $errors
-     */
     public function __construct(array $errors = [])
     {
         $this->errors = $errors;
     }
 
-    /**
-     * @return string
-     */
     public function format(): string
     {
         return $this->getMessage();
     }
 
-    /**
-     * @return string
-     */
     protected function getMessage(): string
     {
         $messages = [];
-        $headers = ['Unimported', 'Lines'];
+        $headers = ['Not imported', 'Lines'];
         $buffer = new BufferedOutput();
 
         foreach ($this->errors as $file => $fileErrors) {
@@ -67,11 +48,6 @@ class FqnCheckerFormatter
         return $this->getHeading().PHP_EOL.PHP_EOL.implode(PHP_EOL, $messages);
     }
 
-    /**
-     * @param array $fileErrors
-     *
-     * @return array
-     */
     protected function getRows(array $fileErrors): array
     {
         $rows = [];
@@ -85,12 +61,9 @@ class FqnCheckerFormatter
         return $rows;
     }
 
-    /**
-     * @return string
-     */
     protected function getHeading(): string
     {
-        $message = 'Used unimported functions or/and constants';
+        $message = 'Used not imported functions or/and constants';
 
         $wrap = str_repeat('*', strlen($message) + 12);
 
