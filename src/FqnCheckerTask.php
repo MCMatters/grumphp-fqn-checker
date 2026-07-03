@@ -14,11 +14,13 @@ use GrumPHP\Task\Context\GitPreCommitContext;
 use GrumPHP\Task\Context\RunContext;
 use GrumPHP\Task\TaskInterface;
 use McMatters\FqnChecker\Console\Command\RunCommand;
+use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 use function implode;
+use function method_exists;
 
 use const PHP_EOL;
 
@@ -88,7 +90,14 @@ class FqnCheckerTask implements TaskInterface
 
         $app = new Application();
         $app->setAutoExit(false);
-        $app->add(new RunCommand());
+
+        if (method_exists($app, 'addCommand')) {
+            $app->addCommand(new RunCommand());
+        } elseif (method_exists($app, 'add')) {
+            $app->add(new RunCommand());
+        } else {
+            throw new RuntimeException('Unsupported application version');
+        }
 
         /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($files as $file) {
